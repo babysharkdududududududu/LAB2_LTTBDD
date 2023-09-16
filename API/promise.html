@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+    <div id="userList">
+    </div>
+
+    <script>
+        const promiseFunction = function(resolve, reject){
+            var url = "https://650423e0c8869921ae248ff5.mockapi.io/api/users";
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', url, true);
+            xhr.onload = function() {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    var users = JSON.parse(xhr.responseText);
+                    resolve(users);
+                } else {
+                    reject(xhr.statusText);
+                }
+            }
+            xhr.send();
+        }
+
+        var promise = new Promise(promiseFunction);
+
+        promise.then((data)=>{
+            const userList = document.getElementById("userList");
+            
+            // Tạo danh sách người dùng và hiển thị thông tin của mỗi người dùng
+            data.forEach(user => {
+                const userElement = document.createElement("p");
+                userElement.textContent = "Last Name: " + user.lastName + ", First Name: " + user.firstName + ", Age: " + user.age;
+                userList.appendChild(userElement);
+            });
+        }).catch((error) => {
+            console.error("Error:", error);
+        });
+    </script>
+</body>
+</html>
